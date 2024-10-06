@@ -47,11 +47,14 @@ def countries_detail(request, pk):
         return JsonResponse(countries_serializer.data)
 
     elif request.method == "PUT":
-        countries_data = JsonResponse().parse(request)
+        countries_data = JSONParser().parse(request)
         countries_serializer = CountriesSerializer(countries, data=countries_data)
         if countries_serializer.is_valid():
             countries_serializer.save()
             return JsonResponse(countries_serializer.data)
+        return JsonResponse(
+            countries_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
 
     elif request.method == "DELETE":
         countries.delete()
